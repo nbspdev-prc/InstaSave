@@ -1,14 +1,18 @@
 /**
  * Creates and returns a styled button element for opening media.
+ * @param {HTMLElement} container - If true, styles for a story layout, 
+ * which doesnt include <article> inside <section>.
  * @returns {HTMLButtonElement}
  */
-function createLayout() {
+function createLayout(container) {
     const button = document.createElement("button");
     button.textContent = "📂 Open";
     button.className = "custom-copy-btn";
+    const topOffest = container.tagName === "SECTION" ? "9vh" : "1vh";
+
     button.style.cssText = `
         position: absolute;
-        top: 1.5vh;
+        top: ${topOffest};
         right: 1.5vw;
         padding: 0.4em 0.8em;
         font-size: 0.75rem;
@@ -107,20 +111,29 @@ function initMediaBtn(container) {
 }
 
 
+function getContainer(el) {
+    const article = el.closest("article");
+    if (article) return article;
+
+    const section = el.closest("section");
+    return section;
+}
+
+
 const mediaObserver = new MutationObserver(mutations => {
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (node.nodeType !== 1) continue;
 
             if (node.matches?.("img, video")) {
-                const container = node.closest("article");
+                const container = getContainer(node);
                 if (container) initMediaBtn(container);
             }
 
             const media = node.querySelectorAll?.("img, video");
             if (media) {
                 media.forEach(el => {
-                    const container = el.closest("article");
+                    const container = getContainer(el);
                     if (container) initMediaBtn(container);
                 });
             }
@@ -129,6 +142,4 @@ const mediaObserver = new MutationObserver(mutations => {
 });
 
 mediaObserver.observe(document.body, { childList: true, subtree: true });
-
-// Initial scan
 document.querySelectorAll("article, section").forEach(initMediaBtn);
