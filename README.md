@@ -19,7 +19,7 @@ A simple browser extension to add a "Download" button to Instagram posts and sto
    - Select the `/ReadingTime` folder (the root of this project).
 
 4. **(Optional) Pin the Extension**
-   - Click the puzzle piece icon in Chrome and pin "InstagramPostDownload" for easy access.
+   - Click the puzzle piece icon in Chrome and pin "InstaSave" for easy access.
 
 ## Usage
 
