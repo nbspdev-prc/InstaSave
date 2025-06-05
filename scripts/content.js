@@ -64,12 +64,12 @@ function getUrl(media) {
 
     return null;
 }
+
 /**
  * Handles what to do with the media URL.
  * Currently: opens it in a new browser tab.
  * @param {string|null} url
  */
-
 function handleUrl(url) {
     if (url) {
         window.open(url, "_blank");
@@ -110,7 +110,6 @@ function initMediaBtn(container) {
     }
 }
 
-
 function getContainer(el) {
     const article = el.closest("article");
     if (article) return article;
@@ -118,7 +117,6 @@ function getContainer(el) {
     const section = el.closest("section");
     return section;
 }
-
 
 const mediaObserver = new MutationObserver(mutations => {
     for (const mutation of mutations) {
