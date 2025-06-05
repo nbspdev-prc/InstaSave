@@ -32,12 +32,14 @@ A simple browser extension to add a "Download" button to Instagram posts and sto
 
 3. **Download or Open Media**
    - Click the "Download" button to open the media in a new tab. You can then right-click and save the image or video.
+   - If the button doesn't work immediately, try refreshing the page.
+   - Alternatively, you can copy the media link and open it in a separate tab to download.
 
 ## Notes
 
-- The extension works on both posts and stories.
-- For stories, the button is positioned lower to avoid UI overlap.
-- If you encounter issues, try refreshing the page.
+- Everything should work fine out of the box.
+- If you encounter any issues, simply refresh the page.
+- You can also try copying the media link and opening it in a new tab if needed.
 
 ## Development
 
@@ -47,8 +49,3 @@ A simple browser extension to add a "Download" button to Instagram posts and sto
 ---
 
 **Enjoy saving your favorite Instagram media!**
-
-
-
-WIP:
-Video still mess up. open article still mess up. Download more formally.

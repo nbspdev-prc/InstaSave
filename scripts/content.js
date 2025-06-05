@@ -4,7 +4,7 @@
  */
 function createLayout() {
     const button = document.createElement("button");
-    button.textContent = "Download";
+    button.textContent = "Save";
     button.className = "custom-copy-btn";
 
     const isStoriesPage = window.location.href.includes("https://www.instagram.com/stories");
@@ -13,7 +13,7 @@ function createLayout() {
     button.style.cssText = `
         position: absolute;
         top: ${topOffset};
-        left: 1.5vw; /* use left instead of right */
+        right: 1.5vw; /* use left instead of right */
         padding: 0.4em 0.8em;
         font-size: 0.75rem;
         font-weight: 500;
@@ -89,12 +89,15 @@ function initMediaBtn(container) {
         if (media.tagName === "IMG" &&
             typeof media.alt === "string" &&
             (
-                media.alt.trim() === "" ||
-                media.alt.trim().endsWith("'s profile picture")
+                media.alt.trim().endsWith("'s profile picture") ||
+                media.alt.trim().endsWith("Change profile photo")
             )
         ) continue;
         if (media.parentElement.querySelector(".custom-copy-btn")) continue;
         if (media.closest('div[role="menu"]')) continue;
+        if (media.closest('div[role="navigation"]')) continue;
+        if (media.closest('div[role="none"]')) continue;
+        if (media.closest('a[role="link"]')) continue;
 
         const url = getUrl(media);
         if (!url) continue;
@@ -110,26 +113,52 @@ function initMediaBtn(container) {
     }
 }
 
-const mediaObserver = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
-            if (node.nodeType !== 1) continue;
+/**
+ * Observes the DOM for added <img> or <video> elements inside <article> or <section>,
+ * and attaches media download buttons to them using initMediaBtn().
+ * 
+ * This function also sets up a MutationObserver to handle dynamically loaded content 
+ * (e.g. Instagram's infinite scroll or SPA navigation).
+ * 
+ * It disconnects any existing observer before starting a new one.
+ * It is called initially and also re-triggered on URL changes every 500ms.
+ */
+let currentUrl = location.href;
+let mediaObserver = null;
 
-            if (node.matches?.("img, video")) {
-                const container = node.closest("article, section");
-                if (container) initMediaBtn(container);
-            }
+function observeMedia() {
+    if (mediaObserver) mediaObserver.disconnect();
 
-            const media = node.querySelectorAll?.("img, video");
-            if (media) {
-                media.forEach(el => {
+    mediaObserver = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+                if (node.nodeType !== 1) continue;
+
+                if (node.matches?.("img, video")) {
                     const container = node.closest("article, section");
                     if (container) initMediaBtn(container);
-                });
+                }
+
+                const media = node.querySelectorAll?.("img, video");
+                if (media) {
+                    media.forEach(el => {
+                        const container = el.closest("article, section");
+                        if (container) initMediaBtn(container);
+                    });
+                }
             }
         }
-    }
-});
+    });
 
-mediaObserver.observe(document.body, { childList: true, subtree: true });
-document.querySelectorAll("article, section").forEach(initMediaBtn);
+    mediaObserver.observe(document.body, { childList: true, subtree: true });
+    document.querySelectorAll("article, section").forEach(initMediaBtn);
+}
+
+setInterval(() => {
+    if (location.href !== currentUrl) {
+        currentUrl = location.href;
+        observeMedia();
+    }
+}, 500);
+
+observeMedia();
