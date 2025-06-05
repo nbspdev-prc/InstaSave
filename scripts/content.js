@@ -1,4 +1,8 @@
-function createButton() {
+/**
+ * Creates and returns a styled button element for opening media.
+ * @returns {HTMLButtonElement}
+ */
+function createLayout() {
     const button = document.createElement("button");
     button.textContent = "📋 Open Media";
     button.className = "custom-copy-btn";
@@ -18,48 +22,59 @@ function createButton() {
     return button;
 }
 
-function getMediaUrl(media) {
-    if (media.tagName === "IMG") {
-        return media.src;
-    } else if (media.tagName === "VIDEO") {
+
+/**
+ * Extracts the direct URL from an <img> or <video> element.
+ * For <video>, searches JSON script tags for an .mp4 URL.
+ * @param {HTMLElement} media
+ * @returns {string|null}
+ */
+function getUrl(media) {
+    if (media.tagName === "IMG") return media.src || null;
+    if (media.tagName === "VIDEO") {
         const scripts = document.querySelectorAll('script[type="application/json"]');
         for (const script of scripts) {
-            try {
-                const json = JSON.parse(script.textContent);
-                const jsonStr = JSON.stringify(json);
-                if (jsonStr.includes("video_versions")) {
-                    const match = jsonStr.match(/"url":"(https:[^"]+\.mp4.*?)"/);
-                    if (match) {
-                        return decodeURIComponent(match[1].replace(/\\\//g, "/"));
-                    }
-                }
-            } catch (e) {
-                console.error("Failed to parse JSON script", e);
+            const jsonText = script.textContent;
+            const match = jsonText.match(/"url":"(https:[^"]+\.mp4.*?)"/);
+            if (match) {
+                return decodeURIComponent(match[1].replace(/\\\//g, "/"));
             }
         }
     }
+    
     return null;
 }
+/**
+ * Handles what to do with the media URL.
+ * Currently: opens it in a new browser tab.
+ * @param {string|null} url
+ */
 
-function handleMediaOutput(url) {
-    if (url) window.open(url, "_blank");
-    else console.warn("No media URL found.");
+function handleUrl(url) {
+    if (url) {
+        window.open(url, "_blank");
+    } else console.warn("No media URL found.");
 }
 
-
-function addOpenMediaButton() {
+/**
+ * Initializes the "Open Media" button on the first image or video found.
+ * Adds the button, sets positioning, and hooks up click behavior.
+ */
+function initMediaBtn() {
     const media = document.querySelector("video, img");
     if (!media || media.parentElement.querySelector(".custom-copy-btn")) return;
 
-    const button = createButton();
+    const url = getUrl(media);
+    if (!url) return;
+
+    const button = createLayout();
     const parent = media.parentElement;
     parent.style.position = "relative";
     parent.appendChild(button);
 
     button.addEventListener("click", () => {
-        const url = getMediaUrl(media);
-        handleMediaOutput(url);
+        handleUrl(url);
     });
 }
 
-addOpenMediaButton();
+initMediaBtn();
