@@ -72,7 +72,18 @@ function getUrl(media) {
  */
 function handleUrl(url) {
     if (url) {
-        window.open(url, "_blank");
+        fetch(url)
+        .then(res => res.blob())
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = url.split('/').pop().split('?')[0] || 'image.jpg';
+            a.click();
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(err => console.error("Download failed:", err));
+         
     } else console.warn("No media URL found.");
 }
 
