@@ -40,6 +40,7 @@ A simple browser extension to add a "Download" button to Instagram posts and sto
 - Everything should work fine out of the box.
 - If you encounter any issues, simply refresh the page.
 - You can also try copying the media link and opening it in a new tab if needed.
+- Stories currently buggy with the download button.
 
 ## Development
 

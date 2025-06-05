@@ -67,7 +67,7 @@ function getUrl(media) {
 
 /**
  * Handles what to do with the media URL.
- * Currently: opens it in a new browser tab.
+ * Save the media from the url link
  * @param {string|null} url
  */
 function handleUrl(url) {
