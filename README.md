@@ -1,8 +1,12 @@
-# InstagramPostDownload
+# InstaSave
 
-A simple browser extension to add a "Download" button to Instagram posts and stories, allowing you to quickly open or download media.
+<p align="center">
+  <img src="images/icon128.png" alt="InstaSave Icon" width="96" height="96">
+</p>
 
-## Setup
+A simple browser extension to add a "Download" button to Instagram posts and stories, allowing you to quickly download the media.
+
+## 🚀 Setup
 
 1. **Clone or Download the Repository**
    ```sh
@@ -16,37 +20,36 @@ A simple browser extension to add a "Download" button to Instagram posts and sto
 
 3. **Load Unpacked Extension**
    - Click **Load unpacked**.
-   - Select the `/ReadingTime` folder (the root of this project).
+   - Select the `/InstaSave` folder (the root of this project).
 
 4. **(Optional) Pin the Extension**
    - Click the puzzle piece icon in Chrome and pin "InstaSave" for easy access.
 
-## Usage
+## 📸 Usage
 
 1. **Go to Instagram**
    - Visit any Instagram post or story in your browser.
 
-2. **Find the "Download" Button**
-   - On posts: A "Download" button will appear on the image or video.
+2. **Find the "Save" Button**
+   - On posts: A "Save" button will appear on the image or video.
    - On stories: The button will appear at the top of the story media.
 
 3. **Download or Open Media**
-   - Click the "Download" button to open the media in a new tab. You can then right-click and save the image or video.
+   - Click the "Save" button to open the media in a new tab. You can then right-click and save the image or video.
    - If the button doesn't work immediately, try refreshing the page.
    - Alternatively, you can copy the media link and open it in a separate tab to download.
 
-## Notes
+## 💡 Notes
 
 - Everything should work fine out of the box.
 - If you encounter any issues, simply refresh the page.
 - You can also try copying the media link and opening it in a new tab if needed.
-- Stories currently buggy with the save button.
 
-## Development
+## 🛠️ Development
 
 - All main logic is in `/scripts/content.js`.
 - You can customize the button style or behavior in that file.
 
 ---
 
-**Enjoy saving your favorite Instagram media!**
+**Enjoy saving your favorite Instagram media!** 🎉
