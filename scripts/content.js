@@ -1,7 +1,5 @@
 /**
  * Creates and returns a styled button element for opening media.
- * @param {HTMLElement} container - If true, styles for a story layout, 
- * which doesnt include <article> inside <section>.
  * @returns {HTMLButtonElement}
  */
 function createLayout() {
@@ -10,7 +8,7 @@ function createLayout() {
     button.className = "custom-copy-btn";
 
     const isStoriesPage = window.location.href.includes("https://www.instagram.com/stories");
-    const topOffset = isStoriesPage ? "9vh" : "1vh";
+    const topOffset = isStoriesPage ? "9vh" : "1.5vh";
 
     button.style.cssText = `
         position: absolute;
@@ -95,8 +93,8 @@ function initMediaBtn(container) {
                 media.alt.trim().endsWith("'s profile picture")
             )
         ) continue;
-
         if (media.parentElement.querySelector(".custom-copy-btn")) continue;
+        if (media.closest('div[role="menu"]')) continue;
 
         const url = getUrl(media);
         if (!url) continue;
