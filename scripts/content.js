@@ -41,7 +41,7 @@ function getUrl(media) {
             }
         }
     }
-    
+
     return null;
 }
 /**
@@ -59,9 +59,11 @@ function handleUrl(url) {
 /**
  * Initializes the "Open Media" button on the first image or video found.
  * Adds the button, sets positioning, and hooks up click behavior.
+ * @param {HTMLElement} container 
  */
-function initMediaBtn() {
-    const media = document.querySelector("video, img");
+function initMediaBtn(container) {
+    if (!container) return;
+    const media = container.querySelector("video, img");
     if (!media || media.parentElement.querySelector(".custom-copy-btn")) return;
 
     const url = getUrl(media);
@@ -77,4 +79,4 @@ function initMediaBtn() {
     });
 }
 
-initMediaBtn();
+initMediaBtn(document.querySelector("article"));
