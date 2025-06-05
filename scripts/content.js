@@ -2,13 +2,10 @@
  * Creates and returns a styled button element for opening media.
  * @returns {HTMLButtonElement}
  */
-function createLayout(isStory) {
+function createLayout() {
     const button = document.createElement("button");
-    button.textContent = "📂 Open"; // short, clean
+    button.textContent = "📂 Open";
     button.className = "custom-copy-btn";
-
-    const borderColor = isStory ? "#ff4d4d" : "#4dff4d";
-
     button.style.cssText = `
         position: absolute;
         top: 1.5vh;
@@ -18,27 +15,25 @@ function createLayout(isStory) {
         font-weight: 500;
         font-family: system-ui, sans-serif;
         cursor: pointer;
-        border: 1px solid ${borderColor};
+        border: 1px solid #ffffff;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        color: ${borderColor};
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        color: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         z-index: 9999;
-        transition: all 0.25s ease;
+        transition: all 0.25s ease, transform 0.2s ease;
     `;
 
     button.addEventListener("mouseenter", () => {
-        button.style.background = "rgba(255, 255, 255, 0.25)";
-        button.style.color = "#000";
-        button.style.borderColor = "#999";
+        button.style.background = "rgba(0, 0, 0, 0.6)";
+        button.style.transform = "scale(1.05)";
     });
 
     button.addEventListener("mouseleave", () => {
-        button.style.background = "rgba(255, 255, 255, 0.15)";
-        button.style.color = borderColor;
-        button.style.borderColor = borderColor;
+        button.style.background = "rgba(0, 0, 0, 0.4)";
+        button.style.transform = "scale(1)";
     });
 
     return button;
@@ -118,15 +113,15 @@ const mediaObserver = new MutationObserver(mutations => {
             if (node.nodeType !== 1) continue;
 
             if (node.matches?.("img, video")) {
-                const container = node.closest("article, section");
-                if (container) initMediaBtn();
+                const container = node.closest("article");
+                if (container) initMediaBtn(container);
             }
 
             const media = node.querySelectorAll?.("img, video");
             if (media) {
                 media.forEach(el => {
-                    const container = el.closest("article, section");
-                    if (container) initMediaBtn();
+                    const container = el.closest("article");
+                    if (container) initMediaBtn(container);
                 });
             }
         }
