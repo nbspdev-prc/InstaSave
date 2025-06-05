@@ -47,3 +47,8 @@ A simple browser extension to add a "Download" button to Instagram posts and sto
 ---
 
 **Enjoy saving your favorite Instagram media!**
+
+
+
+WIP:
+Video still mess up. open article still mess up. Download more formally.
