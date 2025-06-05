@@ -4,16 +4,18 @@
  * which doesnt include <article> inside <section>.
  * @returns {HTMLButtonElement}
  */
-function createLayout(container) {
+function createLayout() {
     const button = document.createElement("button");
-    button.textContent = "📂 Open";
+    button.textContent = "Download";
     button.className = "custom-copy-btn";
-    const topOffest = container.tagName === "SECTION" ? "9vh" : "1vh";
+
+    const isStoriesPage = window.location.href.includes("https://www.instagram.com/stories");
+    const topOffset = isStoriesPage ? "9vh" : "1vh";
 
     button.style.cssText = `
         position: absolute;
-        top: ${topOffest};
-        right: 1.5vw;
+        top: ${topOffset};
+        left: 1.5vw; /* use left instead of right */
         padding: 0.4em 0.8em;
         font-size: 0.75rem;
         font-weight: 500;
@@ -99,7 +101,7 @@ function initMediaBtn(container) {
         const url = getUrl(media);
         if (!url) continue;
 
-        const button = createLayout(container);
+        const button = createLayout();
         const parent = media.parentElement;
         parent.style.position = "relative";
         parent.appendChild(button);
@@ -110,28 +112,20 @@ function initMediaBtn(container) {
     }
 }
 
-function getContainer(el) {
-    const article = el.closest("article");
-    if (article) return article;
-
-    const section = el.closest("section");
-    return section;
-}
-
 const mediaObserver = new MutationObserver(mutations => {
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (node.nodeType !== 1) continue;
 
             if (node.matches?.("img, video")) {
-                const container = getContainer(node);
+                const container = node.closest("article, section");
                 if (container) initMediaBtn(container);
             }
 
             const media = node.querySelectorAll?.("img, video");
             if (media) {
                 media.forEach(el => {
-                    const container = getContainer(el);
+                    const container = node.closest("article, section");
                     if (container) initMediaBtn(container);
                 });
             }
