@@ -2,8 +2,8 @@
     "manifest_version": 3,
     "name": "InstaSave",
     "version": "1.0",
-    "description": "Add the reading time to Chrome Extension documentation articles",
-
+    "description": "Add the options to download posts, stories, and reels from Instagram.",
+    "author": "Percy Pham",
     "content_scripts": [
       {
         "js": ["scripts/content.js"],
