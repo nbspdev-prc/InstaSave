@@ -9,13 +9,12 @@ function createLayout() {
 
     // Determine the top offset based on the the type of page.
     const isStoriesPage = window.location.href.includes("https://www.instagram.com/stories");
-    // const topOffset = isStoriesPage ? "9vh" : "1.5vh";
-    if (isStoriesPage) return null;
+    const topOffset = isStoriesPage ? "9vh" : "1.5vh";
 
     button.style.cssText = `
         position: absolute;
-        top: 1.5vh;
-        right: 1.5vw; /* use left instead of right */
+        top: ${topOffset};
+        right: 1.5vw;
         padding: 0.4em 0.8em;
         font-size: 0.75rem;
         font-weight: 500;
