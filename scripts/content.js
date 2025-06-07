@@ -138,8 +138,8 @@ function initMediaBtn(container) {
  * It disconnects any existing observer before starting a new one.
  * It is called initially and also re-triggered on URL changes every 500ms.
  */
-let currentUrl = location.href;
 let mediaObserver = null;
+let currentUrl = location.href;
 
 function observeMedia() {
     if (mediaObserver) mediaObserver.disconnect();
