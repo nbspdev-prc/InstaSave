@@ -120,6 +120,7 @@ function initMediaBtn(container) {
         if (!url) continue;
 
         const button = createLayout();
+        if (!button) continue;
         media.parentElement.style.position = "relative";
         media.parentElement.appendChild(button);
 
