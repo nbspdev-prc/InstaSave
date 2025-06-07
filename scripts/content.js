@@ -99,7 +99,8 @@ function skipMedia(media) {
     if (media.closest('div[role="menu"], div[role="navigation"], div[role="none"], a[role="link"]')) return true;
     if (media.tagName === "IMG" && typeof media.alt === "string") {
         const alt = media.alt.trim();
-        if (alt.endsWith("'s profile picture") || alt.endsWith("Change profile photo")) return true;
+        if (alt.endsWith("'s profile picture") || alt.endsWith("Change profile photo") ||
+            alt.endsWith("User avatar")) return true;
     }
     return false;
 }
