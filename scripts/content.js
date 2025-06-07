@@ -32,6 +32,15 @@ function createLayout() {
         transition: all 0.25s ease, transform 0.2s ease;
     `;
 
+    addBtnEffects(button);
+    return button;
+}
+
+/**
+ * Adds hover effects to the download button
+ * @param {HTMLButtonElement} button
+ */
+function addBtnEffects(button) {
     button.addEventListener("mouseenter", () => {
         button.style.background = "rgba(0, 0, 0, 0.6)";
         button.style.transform = "scale(1.05)";
@@ -41,8 +50,6 @@ function createLayout() {
         button.style.background = "rgba(0, 0, 0, 0.4)";
         button.style.transform = "scale(1)";
     });
-
-    return button;
 }
 
 /**
@@ -92,11 +99,17 @@ function handleUrl(url) {
 /**
  * Should skip this media element?
  * @param {HTMLElement} media
+ * @return {boolean}
  */
 function skipMedia(media) {
     if (!media) return true;
+    // Already has a save button
     if (media.parentElement.querySelector(".instasave-bt")) return true;
+
+    // Skip if the media is inside a menu or navigation element
     if (media.closest('div[role="menu"], div[role="navigation"], div[role="none"], a[role="link"]')) return true;
+
+    // Skip profile pictures and avatars
     if (media.tagName === "IMG" && typeof media.alt === "string") {
         const alt = media.alt.trim();
         if (alt.endsWith("'s profile picture") || alt.endsWith("Change profile photo") ||
@@ -151,11 +164,13 @@ function observeMedia() {
             for (const node of mutation.addedNodes) {
                 if (node.nodeType !== 1) continue;
 
+                // Prevent the button from disappearing when we switch post
                 if (node.matches?.("img, video")) {
                     const container = node.closest("article, section");
                     if (container) initMediaBtn(container);
                 }
 
+                // Checking all the pictures and post is loaded
                 const media = node.querySelectorAll?.("img, video");
                 if (media) {
                     media.forEach(el => {
