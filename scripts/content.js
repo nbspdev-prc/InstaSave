@@ -5,7 +5,7 @@
 function createLayout() {
     const button = document.createElement("button");
     button.textContent = "Save";
-    button.className = "custom-copy-btn";
+    button.className = "instasave-bt";
 
     // Determine the top offset based on the the type of page.
     const isStoriesPage = window.location.href.includes("https://www.instagram.com/stories");
@@ -90,60 +90,42 @@ function handleUrl(url) {
 }
 
 /**
+ * Should skip this media element?
+ * @param {HTMLElement} media
+ */
+function skipMedia(media) {
+    if (!media) return true;
+    if (media.parentElement.querySelector(".instasave-bt")) return true;
+    if (media.closest('div[role="menu"], div[role="navigation"], div[role="none"], a[role="link"]')) return true;
+    if (media.tagName === "IMG" && typeof media.alt === "string") {
+        const alt = media.alt.trim();
+        if (alt.endsWith("'s profile picture") || alt.endsWith("Change profile photo")) return true;
+    }
+    return false;
+}
+
+/**
  * Initializes the "Open Media" button on the first image or video found.
  * Adds the button, sets positioning, and hooks up click behavior.
  * @param {HTMLElement} container 
  */
 function initMediaBtn(container) {
     if (!container) return;
-
     const mediaElements = container.querySelectorAll("video, img");
     for (const media of mediaElements) {
-        // Unused media elements or those with specific alt text are skipped
-        if (media.tagName === "IMG" &&
-            typeof media.alt === "string" &&
-            (
-                media.alt.trim().endsWith("'s profile picture") ||
-                media.alt.trim().endsWith("Change profile photo")
-            )
-        ) continue;
-        if (media.parentElement.querySelector(".custom-copy-btn")) continue;
-        if (media.closest('div[role="menu"]') ||
-            media.closest('div[role="navigation"]') ||
-            media.closest('div[role="none"]') ||
-            media.closest('a[role="link"]')) continue;
+        if (skipMedia(media)) continue;
 
-        // Skip if the url does not exist
         const url = getUrl(media);
         if (!url) continue;
 
-        // Create and append the button
         const button = createLayout();
-        const parent = media.parentElement;
-        parent.style.position = "relative";
-        parent.appendChild(button);
+        media.parentElement.style.position = "relative";
+        media.parentElement.appendChild(button);
 
         button.addEventListener("click", () => {
             handleUrl(url);
         });
     }
-}
-
-function storyUpdate() {
-    if (!window.location.href.includes("/stories/")) return;
-
-    const storySection = document.querySelector("section");
-
-    if (!storySection) return;
-
-    const storyObserver = new MutationObserver(() => {
-        initMediaBtn(storySection); // always update
-    });
-
-    storyObserver.observe(storySection, {
-        childList: true,
-        subtree: true,
-    });
 }
 
 /**
@@ -185,7 +167,6 @@ function observeMedia() {
 
     mediaObserver.observe(document.body, { childList: true, subtree: true });
     document.querySelectorAll("article, section").forEach(initMediaBtn);
-    storyUpdate();
 }
 
 setInterval(() => {
