@@ -7,12 +7,14 @@ function createLayout() {
     button.textContent = "Save";
     button.className = "custom-copy-btn";
 
+    // Determine the top offset based on the the type of page.
     const isStoriesPage = window.location.href.includes("https://www.instagram.com/stories");
-    const topOffset = isStoriesPage ? "9vh" : "1.5vh";
+    // const topOffset = isStoriesPage ? "9vh" : "1.5vh";
+    if (isStoriesPage) return null;
 
     button.style.cssText = `
         position: absolute;
-        top: ${topOffset};
+        top: 1.5vh;
         right: 1.5vw; /* use left instead of right */
         padding: 0.4em 0.8em;
         font-size: 0.75rem;
@@ -26,7 +28,7 @@ function createLayout() {
         -webkit-backdrop-filter: blur(3px);
         color: #ffffff;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        z-index: 9999;
+        z-index: 2147483647;
         transition: all 0.25s ease, transform 0.2s ease;
     `;
 
@@ -97,6 +99,7 @@ function initMediaBtn(container) {
 
     const mediaElements = container.querySelectorAll("video, img");
     for (const media of mediaElements) {
+        // Unused media elements or those with specific alt text are skipped
         if (media.tagName === "IMG" &&
             typeof media.alt === "string" &&
             (
@@ -105,14 +108,16 @@ function initMediaBtn(container) {
             )
         ) continue;
         if (media.parentElement.querySelector(".custom-copy-btn")) continue;
-        if (media.closest('div[role="menu"]')) continue;
-        if (media.closest('div[role="navigation"]')) continue;
-        if (media.closest('div[role="none"]')) continue;
-        if (media.closest('a[role="link"]')) continue;
+        if (media.closest('div[role="menu"]') ||
+            media.closest('div[role="navigation"]') ||
+            media.closest('div[role="none"]') ||
+            media.closest('a[role="link"]')) continue;
 
+        // Skip if the url does not exist
         const url = getUrl(media);
         if (!url) continue;
 
+        // Create and append the button
         const button = createLayout();
         const parent = media.parentElement;
         parent.style.position = "relative";
@@ -122,6 +127,23 @@ function initMediaBtn(container) {
             handleUrl(url);
         });
     }
+}
+
+function storyUpdate() {
+    if (!window.location.href.includes("/stories/")) return;
+
+    const storySection = document.querySelector("section");
+
+    if (!storySection) return;
+
+    const storyObserver = new MutationObserver(() => {
+        initMediaBtn(storySection); // always update
+    });
+
+    storyObserver.observe(storySection, {
+        childList: true,
+        subtree: true,
+    });
 }
 
 /**
@@ -163,6 +185,7 @@ function observeMedia() {
 
     mediaObserver.observe(document.body, { childList: true, subtree: true });
     document.querySelectorAll("article, section").forEach(initMediaBtn);
+    storyUpdate();
 }
 
 setInterval(() => {
